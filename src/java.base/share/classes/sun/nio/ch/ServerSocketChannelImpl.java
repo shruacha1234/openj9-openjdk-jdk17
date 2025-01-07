@@ -25,7 +25,7 @@
 
 /*
  * ===========================================================================
- * (c) Copyright IBM Corp. 2024, 2024 All Rights Reserved
+ * (c) Copyright IBM Corp. 2024, 2025 All Rights Reserved
  * ===========================================================================
  */
 
@@ -61,6 +61,7 @@ import static java.net.StandardProtocolFamily.INET;
 import static java.net.StandardProtocolFamily.INET6;
 import static java.net.StandardProtocolFamily.UNIX;
 
+import jdk.internal.util.StaticProperty;
 import sun.net.NetHooks;
 import sun.net.ext.ExtendedSocketOptions;
 import sun.net.util.AIX;
@@ -590,10 +591,10 @@ class ServerSocketChannelImpl
             if (!tryClose()) {
                 long th = thread;
                 if (th != 0) {
-                    if (!AIX.isAIX)
+                    if ((!AIX.isAIX) && (!StaticProperty.isJavaFixEnabled()))
                         nd.preClose(fd);
                     NativeThread.signal(th);
-                    if (AIX.isAIX)
+                    if ((AIX.isAIX) && (StaticProperty.isJavaFixEnabled()))
                         nd.preClose(fd);
                 }
             }

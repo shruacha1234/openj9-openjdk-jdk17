@@ -25,7 +25,7 @@
 
 /*
  * ===========================================================================
- * (c) Copyright IBM Corp. 2024, 2024 All Rights Reserved
+ * (c) Copyright IBM Corp. 2024, 2025 All Rights Reserved
  * ===========================================================================
  */
 
@@ -76,6 +76,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
 
 import jdk.internal.ref.CleanerFactory;
+import jdk.internal.util.StaticProperty;
 import sun.net.ResourceManager;
 import sun.net.ext.ExtendedSocketOptions;
 import sun.net.util.AIX;
@@ -1739,13 +1740,13 @@ class DatagramChannelImpl
                 long reader = readerThread;
                 long writer = writerThread;
                 if (reader != 0 || writer != 0) {
-                    if (!AIX.isAIX)
+                    if ((!AIX.isAIX) && (!StaticProperty.isJavaFixEnabled()))
                         nd.preClose(fd);
                     if (reader != 0)
                         NativeThread.signal(reader);
                     if (writer != 0)
                         NativeThread.signal(writer);
-                    if (AIX.isAIX)
+                    if ((AIX.isAIX) && (StaticProperty.isJavaFixEnabled()))
                         nd.preClose(fd);
                 }
             }

@@ -25,7 +25,7 @@
 
 /*
  * ===========================================================================
- * (c) Copyright IBM Corp. 2024, 2024 All Rights Reserved
+ * (c) Copyright IBM Corp. 2024, 2025 All Rights Reserved
  * ===========================================================================
  */
 
@@ -57,6 +57,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 import jdk.internal.ref.CleanerFactory;
+import jdk.internal.util.StaticProperty;
 import sun.net.ConnectionResetException;
 import sun.net.NetHooks;
 import sun.net.PlatformSocketImpl;
@@ -916,7 +917,7 @@ public final class NioSocketImpl extends SocketImpl implements PlatformSocketImp
             // then the socket is pre-closed and the thread(s) signalled. The
             // last thread will close the file descriptor.
             if (!tryClose()) {
-                if (!AIX.isAIX)
+                if ((!AIX.isAIX) && (!StaticProperty.isJavaFixEnabled()))
                     nd.preClose(fd);
                 long reader = readerThread;
                 if (reader != 0)
@@ -924,7 +925,7 @@ public final class NioSocketImpl extends SocketImpl implements PlatformSocketImp
                 long writer = writerThread;
                 if (writer != 0)
                     NativeThread.signal(writer);
-                if (AIX.isAIX)
+                if ((AIX.isAIX) && (StaticProperty.isJavaFixEnabled()))
                     nd.preClose(fd);
             }
         }

@@ -23,6 +23,12 @@
  * questions.
  */
 
+/*
+ * ===========================================================================
+ * (c) Copyright IBM Corp. 2025, 2025 All Rights Reserved
+ * ===========================================================================
+ */
+
 package jdk.internal.util;
 
 import java.util.Properties;
@@ -79,6 +85,10 @@ public final class StaticProperty {
                                       String defaultVal) {
         String v = props.getProperty(key);
         return (v == null) ? defaultVal : v;
+    }
+
+    public static boolean isJavaFixEnabled() {
+        return Boolean.parseBoolean(System.getProperty("enable.ibm.java.fix", "false"));
     }
 
     /**
