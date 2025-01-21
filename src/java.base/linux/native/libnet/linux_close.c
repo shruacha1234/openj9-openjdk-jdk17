@@ -286,6 +286,14 @@ static int closefd(int fd1, int fd2) {
     pthread_mutex_lock(&(fdEntry->lock));
 
     {
+
+        threadEntry_t *curr = fdEntry->threads;
+        while (curr != NULL) {
+            curr->intr = 1;
+            pthread_kill( curr->thr, WAKEUP_SIGNAL);
+            curr = curr->next;
+        }
+
         /*
          * And close/dup the file descriptor
          * (restart if interrupted by signal)
@@ -302,12 +310,13 @@ static int closefd(int fd1, int fd2) {
          * Send a wakeup signal to all threads blocked on this
          * file descriptor.
          */
-        threadEntry_t *curr = fdEntry->threads;
+/*        threadEntry_t *curr = fdEntry->threads;
         while (curr != NULL) {
             curr->intr = 1;
             pthread_kill( curr->thr, WAKEUP_SIGNAL);
             curr = curr->next;
         }
+*/
     }
 
     /*
