@@ -322,10 +322,13 @@ static int closefd(int fd1, int fd2) {
          * And close/dup the file descriptor
          * (restart if interrupted by signal)
          */
+        printf("Calling the close/dup2() method first");
         do {
             if (fd1 < 0) {
+                printf("Calling the close method");
                 rv = close(fd2);
             } else {
+                printf("Calling the dup2() method");
                 rv = dup2(fd1, fd2);
             }
         } while (rv == -1 && errno == EINTR);
@@ -336,6 +339,7 @@ static int closefd(int fd1, int fd2) {
          * Also see https://bugs.openjdk.java.net/browse/JDK-8006395 */
  //       int num_woken = 0;
 
+        printf("Signal the thread");
         /*
          * Send a wakeup signal to all threads blocked on this
          * file descriptor.

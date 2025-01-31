@@ -255,6 +255,7 @@ public abstract class AbstractSelectableChannel
      * cancels all of this channel's keys.  </p>
      */
     protected final void implCloseChannel() throws IOException {
+        System.out.println("Entering the AbstractSelectableChannel.implCloseChannel");
         implCloseSelectableChannel();
 
         // clone keys to avoid calling cancel when holding keyLock

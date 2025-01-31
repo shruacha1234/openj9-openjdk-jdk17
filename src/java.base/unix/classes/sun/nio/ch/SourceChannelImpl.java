@@ -131,6 +131,7 @@ class SourceChannelImpl
             if (!tryClose()) {
                 long th = thread;
                 if (th != 0) {
+                    System.out.println("Entering the preclose call");
                     nd.preClose(fd);
                     NativeThread.signal(th);
                 }

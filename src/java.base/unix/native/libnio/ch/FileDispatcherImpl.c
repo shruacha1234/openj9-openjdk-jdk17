@@ -317,6 +317,7 @@ Java_sun_nio_ch_FileDispatcherImpl_close0(JNIEnv *env, jclass clazz, jobject fdo
 JNIEXPORT void JNICALL
 Java_sun_nio_ch_FileDispatcherImpl_preClose0(JNIEnv *env, jclass clazz, jobject fdo)
 {
+    printf("Enetering to the FileDispatcherImpl_preClose0 native method");
     jint fd = fdval(env, fdo);
     if (preCloseFD >= 0) {
         if (dup2(preCloseFD, fd) < 0)

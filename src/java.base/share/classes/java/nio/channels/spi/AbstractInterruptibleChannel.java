@@ -109,6 +109,7 @@ public abstract class AbstractInterruptibleChannel
             if (closed)
                 return;
             closed = true;
+            System.out.println("Entering AbstractInterruptibleChannel.close");
             implCloseChannel();
         }
     }
