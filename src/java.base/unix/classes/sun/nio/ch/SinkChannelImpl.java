@@ -131,11 +131,8 @@ class SinkChannelImpl
             if (!tryClose()) {
                 long th = thread;
                 if (th != 0) {
-                    if (!AIX.isAIX)
-                        nd.preClose(fd);
+                    nd.preClose(fd);
                     NativeThread.signal(th);
-                    if (AIX.isAIX)
-                        nd.preClose(fd);
                 }
             }
         }

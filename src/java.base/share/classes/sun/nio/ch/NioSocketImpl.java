@@ -916,16 +916,13 @@ public final class NioSocketImpl extends SocketImpl implements PlatformSocketImp
             // then the socket is pre-closed and the thread(s) signalled. The
             // last thread will close the file descriptor.
             if (!tryClose()) {
-                if (!AIX.isAIX)
-                    nd.preClose(fd);
+                nd.preClose(fd);
                 long reader = readerThread;
                 if (reader != 0)
                     NativeThread.signal(reader);
                 long writer = writerThread;
                 if (writer != 0)
                     NativeThread.signal(writer);
-                if (AIX.isAIX)
-                    nd.preClose(fd);
             }
         }
     }

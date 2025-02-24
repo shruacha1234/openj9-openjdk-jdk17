@@ -54,6 +54,11 @@
 #define fdatasync fsync
 #endif
 
+#if defined(AIX)
+#define RETRY_COUNT 100         /* Retry count while function returns -1 and errno is EAGAIN */
+#define SLEEP_INTERVAL  50      /* Interval sleep time before retrying to call function */
+#endif
+
 #include "jni.h"
 #include "jni_util.h"
 #include "jvm.h"
@@ -319,7 +324,22 @@ Java_sun_nio_ch_FileDispatcherImpl_preClose0(JNIEnv *env, jclass clazz, jobject 
 {
     jint fd = fdval(env, fdo);
     if (preCloseFD >= 0) {
-        if (dup2(preCloseFD, fd) < 0)
+        int result = dup2(preCloseFD, fd);
+#if defined(AIX)
+        int retryCount = 0;
+        while ((result < 0) && errno == EAGAIN && retryCount < RETRY_COUNT) {
+        /*
+         * Give sometime for the application to complete the current operation
+         * and throw the exception if we tried for enough number of times on
+         * zOS because (result<0 && errno==EAGAIN) would be a bug of OS itself,
+         * please ref the explanation in link of closeFileDescriptor.
+         */
+            usleep(SLEEP_INTERVAL);
+            result = dup2(preCloseFD, fd);
+            retryCount++;
+        }
+#endif
+        if (result < 0)
             JNU_ThrowIOExceptionWithLastError(env, "dup2 failed");
     }
 }
