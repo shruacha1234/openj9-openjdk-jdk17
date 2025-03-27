@@ -65,11 +65,6 @@ class DatagramDispatcher extends NativeDispatcher {
     }
 
     @Override
-    void preClose(FileDescriptor fd) throws IOException {
-        FileDispatcherImpl.preClose0(fd);
-    }
-
-    @Override
     void dup(FileDescriptor fd1, FileDescriptor fd2) throws IOException {
         FileDispatcherImpl.dup0(fd1, fd2);
     }

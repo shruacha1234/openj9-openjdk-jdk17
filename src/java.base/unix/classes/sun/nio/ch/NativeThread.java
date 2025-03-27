@@ -50,6 +50,10 @@ public class NativeThread {
 
     private static native boolean supportPendingSignals0();
 
+    static boolean isNativeThread(long tid) {
+        return false;
+    }
+
     // Returns an opaque token representing the native thread underlying the
     // invoking Java thread.  On systems that do not require signalling, this
     // method always returns -1.

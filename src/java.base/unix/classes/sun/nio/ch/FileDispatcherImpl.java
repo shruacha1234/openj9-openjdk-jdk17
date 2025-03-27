@@ -197,9 +197,9 @@ class FileDispatcherImpl extends FileDispatcher {
 
     // Shared with SocketDispatcher and DatagramDispatcher but
     // NOT used by FileDispatcherImpl
-    private static native void close0(FileDescriptor fd) throws IOException;
+    static native void close0(FileDescriptor fd) throws IOException;
 
-    private static native void preClose0(FileDescriptor fd) throws IOException;
+    static native void preClose0(FileDescriptor fd) throws IOException;
 
     static native void dup0(FileDescriptor fd1, FileDescriptor fd2) throws IOException;
 
